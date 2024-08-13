@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Earth with City Search</title>
+    <style>
+        #earthContainer {
+            height: 500px;
+            width: 100%;
+        }
+        #search-container {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input id="cityInput" type="text" placeholder="Enter a city">
+        <button onclick="searchCity()">Search</button>
+    </div>
+    <div id="earthContainer"></div>
+
+    <script src="https://www.gstatic.com/earth/earth-api/stable/earth.js"></script>
+
+    <script>
+        let ge;
+        
+        function init() {
+            google.earth.createInstance('earthContainer', initCallback, failureCallback);
+        }
+
+        function initCallback(instance) {
+            ge = instance;
+            ge.getWindow().setVisibility(true);
+
+            // Set initial view to Uluru, Australia
+            const lookAt = ge.createLookAt('');
+            lookAt.setLatitude(-25.363);
+            lookAt.setLongitude(131.044);
+            lookAt.setRange(500000.0); // Zoom out
+            ge.getView().setAbstractView(lookAt);
+        }
+
+        function failureCallback(error) {
+            console.error('Google Earth failed to initialize:', error);
+        }
+
+        function searchCity() {
+            const city = document.getElementById('cityInput').value;
+            const geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ address: city }, function(results, status) {
+                if (status === 'OK') {
+                    const location = results[0].geometry.location;
+                    const lookAt = ge.createLookAt('');
+                    lookAt.setLatitude(location.lat());
+                    lookAt.setLongitude(location.lng());
+                    lookAt.setRange(50000.0); // Zoom in closer to the city
+                    ge.getView().setAbstractView(lookAt);
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

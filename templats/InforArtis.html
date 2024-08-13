@@ -3,7 +3,6 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="/styles/css/artis.css">
-        
         <title>Artist Info</title>
     </head>
     <body>
@@ -71,6 +70,18 @@
                                 <div>
                                     <h3 class="title">Locations Maps</h3>
                                     <span class="prog"></span>
+                                    <select name="city" id="cityInput">
+                                        {{range $location, $dates := .DatesLocations}}  
+                                            <option value="{{$location}}">{{$location}}</option>
+                                        {{end}}
+                                    </select>
+                                    <button onclick="searchCity()">Search</button>
+                                </div>
+                                <div id="map"></div>
+                            
+                                <script
+                                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places"
+                                    defer></script>
                                 </div>
                             </div>
                            
@@ -79,6 +90,6 @@
                 </main>
             </div>
             <script src="/styles/js/navigation.js"></script>
-            <script src="/styles/maps.js"></script>
+            <script src="/styles/js/maps.js"> </script>
         </body>
     </html>
